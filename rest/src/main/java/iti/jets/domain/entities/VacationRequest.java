@@ -34,8 +34,4 @@ public class VacationRequest {
     @JoinColumn(name = "vacation_id")
     private VacationType vacation;
 
-    @Lob
-    @Column(name = "reason")
-    private String reason;
-
 }

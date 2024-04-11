@@ -22,7 +22,7 @@ public class Department {
     @Column(name = "department_name", length = 100)
     private String departmentName;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "manager_id")
     private Employee manager;
 

@@ -46,6 +46,19 @@ public class DepartmentService {
         entityManager.close();
     }
 
+    public Employee getDepartmentManager(int departmentId) {
+        DepartmentRepository departmentRepository = new DepartmentRepository();
+        EntityManager entityManager = JpaManager.createEntityManager();
+        Department department = departmentRepository.find(entityManager, departmentId);
+        Employee ret = null;
+        if (department != null) {
+            ret = department.getManager();
+            ret.getEmail();
+        }
+        entityManager.close();
+        return ret;
+    }
+
     public Set<Project> getDepartmentProjects(int departmentId) {
         DepartmentRepository departmentRepository = new DepartmentRepository();
         EntityManager entityManager = JpaManager.createEntityManager();
@@ -53,6 +66,7 @@ public class DepartmentService {
         Set<Project> ret = null;
         if (department != null) {
             ret = department.getProjects();
+            ret.size();
         }
         entityManager.close();
         return ret;
@@ -65,6 +79,7 @@ public class DepartmentService {
         Set<Employee> ret = null;
         if (department != null) {
             ret = department.getEmployees();
+            ret.size();
         }
         entityManager.close();
         return ret;

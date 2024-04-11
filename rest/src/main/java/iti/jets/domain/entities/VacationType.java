@@ -23,6 +23,6 @@ public class VacationType {
     private String vacationName;
 
     @OneToMany(mappedBy = "vacation")
-    private Set<VacationRequest> vacationRequests = new LinkedHashSet<>();
+    private Set<VacationRequest> vacationrequests = new LinkedHashSet<>();
 
 }

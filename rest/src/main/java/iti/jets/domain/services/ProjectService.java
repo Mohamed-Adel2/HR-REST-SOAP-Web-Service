@@ -2,6 +2,7 @@ package iti.jets.domain.services;
 
 import iti.jets.domain.entities.Employee;
 import iti.jets.domain.entities.Project;
+import iti.jets.persistence.EmployeeRepository;
 import iti.jets.persistence.JpaManager;
 import iti.jets.persistence.ProjectRepository;
 import jakarta.persistence.EntityManager;
@@ -52,8 +53,43 @@ public class ProjectService {
         Set<Employee> ret = null;
         if (project != null) {
             ret = project.getEmployees();
+            ret.size();
         }
         entityManager.close();
         return ret;
+    }
+
+    public Set<Employee> addEmployeeToProject(int projectId, int employeeId) {
+        ProjectRepository projectRepository = new ProjectRepository();
+        EmployeeRepository employeeRepository = new EmployeeRepository();
+        EntityManager entityManager = JpaManager.createEntityManager();
+        Employee employee = employeeRepository.find(entityManager, employeeId);
+        if (employee != null) {
+            entityManager.getTransaction().begin();
+            Project project = projectRepository.addEmployee(entityManager, projectId, employee);
+            Set<Employee> ret = project.getEmployees();
+            ret.size();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return ret;
+        }
+        return null;
+    }
+
+    public Set<Employee> removeEmployeeFromProject(int projectId, int employeeId) {
+        ProjectRepository projectRepository = new ProjectRepository();
+        EmployeeRepository employeeRepository = new EmployeeRepository();
+        EntityManager entityManager = JpaManager.createEntityManager();
+        Employee employee = employeeRepository.find(entityManager, employeeId);
+        if (employee != null) {
+            entityManager.getTransaction().begin();
+            Project project = projectRepository.removeEmployee(entityManager, projectId, employee);
+            Set<Employee> ret = project.getEmployees();
+            ret.size();
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return ret;
+        }
+        return null;
     }
 }

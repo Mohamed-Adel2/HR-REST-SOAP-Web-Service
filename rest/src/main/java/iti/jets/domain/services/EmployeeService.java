@@ -1,6 +1,6 @@
 package iti.jets.domain.services;
 
-import iti.jets.domain.dtos.Employee.EmployeePostRequest;
+import iti.jets.domain.entities.Department;
 import iti.jets.domain.entities.Employee;
 import iti.jets.domain.entities.Project;
 import iti.jets.domain.entities.VacationRequest;
@@ -8,7 +8,6 @@ import iti.jets.persistence.EmployeeRepository;
 import iti.jets.persistence.JpaManager;
 import jakarta.persistence.EntityManager;
 
-import java.util.List;
 import java.util.Set;
 
 public class EmployeeService {
@@ -17,6 +16,8 @@ public class EmployeeService {
         EmployeeRepository employeeRepository = new EmployeeRepository();
         EntityManager entityManager = JpaManager.createEntityManager();
         Employee employee = employeeRepository.find(entityManager, employeeId);
+        Department dep = employee.getManagedDepartment();
+        System.out.println(dep);
         entityManager.close();
         return employee;
     }
@@ -56,6 +57,7 @@ public class EmployeeService {
         Set<Project> ret = null;
         if (employee != null) {
             ret = employee.getProjects();
+            System.out.println(ret.size());
         }
         entityManager.close();
         return ret;
@@ -68,6 +70,7 @@ public class EmployeeService {
         Set<VacationRequest> ret = null;
         if (employee != null) {
             ret = employee.getVacationRequests();
+            ret.size();
         }
         entityManager.close();
         return ret;
