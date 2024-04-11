@@ -4,6 +4,8 @@ import iti.jets.domain.entities.Department;
 import iti.jets.domain.entities.Employee;
 import iti.jets.domain.entities.Project;
 import iti.jets.domain.entities.VacationRequest;
+import iti.jets.domain.exceptions.models.DataNotFoundException;
+import iti.jets.domain.exceptions.models.DataNotModifiedException;
 import iti.jets.persistence.EmployeeRepository;
 import iti.jets.persistence.JpaManager;
 import jakarta.persistence.EntityManager;
@@ -17,8 +19,9 @@ public class EmployeeService {
         EntityManager entityManager = JpaManager.createEntityManager();
         Employee employee = employeeRepository.find(entityManager, employeeId);
         Department dep = employee.getManagedDepartment();
-        System.out.println(dep);
         entityManager.close();
+        if (dep == null)
+            throw new DataNotFoundException("Employee with id " + employeeId + " is not assigned to a department");
         return employee;
     }
 
@@ -31,14 +34,22 @@ public class EmployeeService {
         entityManager.close();
     }
 
-    public Employee updateEmployee(Employee employee){
+    public Employee updateEmployee(Employee employee) {
         EmployeeRepository employeeRepository = new EmployeeRepository();
         EntityManager entityManager = JpaManager.createEntityManager();
-        entityManager.getTransaction().begin();
-        Employee updatedEmployee = employeeRepository.update(entityManager, employee);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        return updatedEmployee;
+        try {
+            entityManager.getTransaction().begin();
+            Employee updatedEmployee = employeeRepository.update(entityManager, employee);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return updatedEmployee;
+        }
+        catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+            throw new DataNotModifiedException("Employee with id " + employee.getId() + " is not updated");
+        }
+
     }
 
     public void deleteEmployee(int employeeId) {

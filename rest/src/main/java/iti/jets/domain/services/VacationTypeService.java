@@ -26,11 +26,17 @@ public class VacationTypeService {
     public VacationType updateVacationType(VacationType vacationType) {
         VacationTypeRepository vacationTypeRepository = new VacationTypeRepository();
         EntityManager entityManager = JpaManager.createEntityManager();
-        entityManager.getTransaction().begin();
-        VacationType updatedVacationType = vacationTypeRepository.update(entityManager, vacationType);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        return updatedVacationType;
+        try {
+            entityManager.getTransaction().begin();
+            VacationType updatedVacationType = vacationTypeRepository.update(entityManager, vacationType);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return updatedVacationType;
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+            throw new RuntimeException("VacationType with id " + vacationType.getId() + " is not updated");
+        }
     }
 
     public void deleteVacationType(int vacationTypeId) {

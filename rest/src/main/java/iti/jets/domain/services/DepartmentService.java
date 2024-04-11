@@ -3,6 +3,7 @@ package iti.jets.domain.services;
 import iti.jets.domain.entities.Department;
 import iti.jets.domain.entities.Employee;
 import iti.jets.domain.entities.Project;
+import iti.jets.domain.exceptions.models.DataNotModifiedException;
 import iti.jets.persistence.DepartmentRepository;
 import iti.jets.persistence.JpaManager;
 import jakarta.persistence.EntityManager;
@@ -30,11 +31,17 @@ public class DepartmentService {
     public Department updateDepartment(Department department) {
         DepartmentRepository departmentRepository = new DepartmentRepository();
         EntityManager entityManager = JpaManager.createEntityManager();
-        entityManager.getTransaction().begin();
-        Department updatedDepartment = departmentRepository.update(entityManager, department);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        return updatedDepartment;
+        try {
+            entityManager.getTransaction().begin();
+            Department updatedDepartment = departmentRepository.update(entityManager, department);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return updatedDepartment;
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+            throw new DataNotModifiedException("Department with id " + department.getId() + " is not updated");
+        }
     }
 
     public void deleteDepartment(int departmentId) {

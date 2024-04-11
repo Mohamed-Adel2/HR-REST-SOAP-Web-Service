@@ -2,6 +2,7 @@ package iti.jets.domain.services;
 
 import iti.jets.domain.entities.Employee;
 import iti.jets.domain.entities.Project;
+import iti.jets.domain.exceptions.models.DataNotModifiedException;
 import iti.jets.persistence.EmployeeRepository;
 import iti.jets.persistence.JpaManager;
 import iti.jets.persistence.ProjectRepository;
@@ -30,11 +31,19 @@ public class ProjectService {
     public Project updateProject(Project project) {
         ProjectRepository projectRepository = new ProjectRepository();
         EntityManager entityManager = JpaManager.createEntityManager();
-        entityManager.getTransaction().begin();
-        Project updatedProject = projectRepository.update(entityManager, project);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        return updatedProject;
+        try {
+            entityManager.getTransaction().begin();
+            Project updatedProject = projectRepository.update(entityManager, project);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return updatedProject;
+        }
+        catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+            throw new DataNotModifiedException("Project with id " + project.getId() + " is not updated");
+        }
+
     }
 
     public void deleteProject(int projectId) {

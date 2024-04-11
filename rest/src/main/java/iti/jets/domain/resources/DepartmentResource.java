@@ -48,7 +48,7 @@ public class DepartmentResource {
         DepartmentService departmentService = new DepartmentService();
         Department department = DepartmentMapper.toDepartment(departmentRequest);
         department.setId(deptId);
-        departmentService.updateDepartment(department);
+        department = departmentService.updateDepartment(department);
         DepartmentResponse departmentResponse = DepartmentMapper.toDepartmentResponse(department);
         return Response.ok(departmentResponse).build();
     }

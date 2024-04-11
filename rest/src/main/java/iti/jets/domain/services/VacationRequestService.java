@@ -26,11 +26,17 @@ public class VacationRequestService {
     public VacationRequest updateVacationRequest(VacationRequest vacationRequest) {
         VacationRequestRepository vacationRequestRepository = new VacationRequestRepository();
         EntityManager entityManager = JpaManager.createEntityManager();
-        entityManager.getTransaction().begin();
-        VacationRequest updatedVacationRequest = vacationRequestRepository.update(entityManager, vacationRequest);
-        entityManager.getTransaction().commit();
-        entityManager.close();
-        return updatedVacationRequest;
+        try {
+            entityManager.getTransaction().begin();
+            VacationRequest updatedVacationRequest = vacationRequestRepository.update(entityManager, vacationRequest);
+            entityManager.getTransaction().commit();
+            entityManager.close();
+            return updatedVacationRequest;
+        } catch (Exception e) {
+            entityManager.getTransaction().rollback();
+            entityManager.close();
+            throw new RuntimeException("VacationRequest with id " + vacationRequest.getId() + " is not updated");
+        }
     }
 
     public void deleteVacationRequest(int vacationRequestId) {
