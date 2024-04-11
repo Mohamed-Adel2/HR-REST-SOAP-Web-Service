@@ -14,7 +14,9 @@ import iti.jets.domain.entities.Project;
 import iti.jets.domain.entities.VacationRequest;
 import iti.jets.domain.services.EmployeeService;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,12 +25,17 @@ import java.util.stream.Collectors;
 @Consumes({"application/json; qs=1", "application/xml; qs=0.75"})
 @Produces({"application/json; qs=1", "application/xml; qs=0.75"})
 public class EmployeeResource {
+
+    @Context
+    private UriInfo uriInfo;
+
     @GET
     @Path("/{empId}")
     public Response getEmployee(@PathParam("empId") int empId) {
         EmployeeService employeeService = new EmployeeService();
         Employee employee = employeeService.findEmployee(empId);
         EmployeeResponse employeeResponse = EmployeeMapper.toEmployeeResponse(employee);
+        employeeResponse.addLinks(uriInfo);
         return Response.ok(employeeResponse).build();
     }
 
@@ -39,6 +46,7 @@ public class EmployeeResource {
         Employee addedEmployee = EmployeeMapper.toEmployee(employee);
         employeeService.addEmployee(addedEmployee);
         EmployeeResponse employeeResponse = EmployeeMapper.toEmployeeResponse(addedEmployee);
+        employeeResponse.addLinks(uriInfo);
         return Response.status(Response.Status.CREATED).entity(employeeResponse).build();
     }
 
@@ -50,6 +58,7 @@ public class EmployeeResource {
         updatedEmployee.setId(empId);
         updatedEmployee = employeeService.updateEmployee(updatedEmployee);
         EmployeeResponse employeeResponse = EmployeeMapper.toEmployeeResponse(updatedEmployee);
+        employeeResponse.addLinks(uriInfo);
         return Response.ok(employeeResponse).build();
     }
 
@@ -59,6 +68,9 @@ public class EmployeeResource {
         EmployeeService employeeService = new EmployeeService();
         Set<Project> projects = employeeService.getEmployeeProjects(empId);
         Set<ProjectResponse> projectResponses = projects.stream().map(ProjectMapper::toProjectResponse).collect(Collectors.toSet());
+        for (ProjectResponse projectResponse : projectResponses) {
+            projectResponse.addLinks(uriInfo);
+        }
         return Response.ok(projectResponses).build();
     }
 
@@ -68,6 +80,9 @@ public class EmployeeResource {
         EmployeeService employeeService = new EmployeeService();
         Set<VacationRequest> vacationRequests = employeeService.getEmployeeVacationRequests(empId);
         Set<VacationReqResponse> vacationRequestResponses = vacationRequests.stream().map(VacationMapper::toVacationReqResponse).collect(Collectors.toSet());
+        for (VacationReqResponse vacationRequestResponse : vacationRequestResponses) {
+            vacationRequestResponse.addLinks(uriInfo);
+        }
         return Response.ok(vacationRequestResponses).build();
     }
 
@@ -77,6 +92,7 @@ public class EmployeeResource {
         EmployeeService employeeService = new EmployeeService();
         Employee employee = employeeService.findEmployee(empId);
         DepartmentResponse departmentResponse = DepartmentMapper.toDepartmentResponse(employee.getDepartment());
+        departmentResponse.addLinks(uriInfo);
         return Response.ok(departmentResponse).build();
     }
 
@@ -86,6 +102,7 @@ public class EmployeeResource {
         EmployeeService employeeService = new EmployeeService();
         Employee employee = employeeService.findEmployee(empId);
         DepartmentResponse departmentResponse = DepartmentMapper.toDepartmentResponse(employee.getManagedDepartment());
+        departmentResponse.addLinks(uriInfo);
         return Response.ok(departmentResponse).build();
     }
 }

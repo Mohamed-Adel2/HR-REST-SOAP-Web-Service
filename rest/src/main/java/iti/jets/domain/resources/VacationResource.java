@@ -11,18 +11,24 @@ import iti.jets.domain.entities.VacationType;
 import iti.jets.domain.services.VacationRequestService;
 import iti.jets.domain.services.VacationTypeService;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 @Path("/vacation")
 @Produces({"application/json", "application/xml"})
 @Consumes({"application/json", "application/xml"})
 public class VacationResource {
+
+    @Context
+    private UriInfo uriInfo;
     @GET
-    @Path("/{vacationId}")
-    public Response getVacation(@PathParam("vacationId") int vacationId) {
+    @Path("/{reqId}")
+    public Response getVacation(@PathParam("reqId") int reqId) {
         VacationRequestService vacationRequestService = new VacationRequestService();
-        VacationRequest vacationRequest = vacationRequestService.findVacationRequest(vacationId);
+        VacationRequest vacationRequest = vacationRequestService.findVacationRequest(reqId);
         VacationReqResponse vacationReqResponse = VacationMapper.toVacationReqResponse(vacationRequest);
+        vacationReqResponse.addLinks(uriInfo);
         return Response.ok(vacationReqResponse).build();
     }
 
@@ -33,6 +39,7 @@ public class VacationResource {
         VacationRequest vacationRequest = VacationMapper.toVacationRequest(vacationReqRequest);
         vacationRequestService.createVacationRequest(vacationRequest);
         VacationReqResponse vacationReqResponse = VacationMapper.toVacationReqResponse(vacationRequest);
+        vacationReqResponse.addLinks(uriInfo);
         return Response.status(Response.Status.CREATED).entity(vacationReqResponse).build();
     }
 
@@ -44,6 +51,7 @@ public class VacationResource {
         vacationRequest.setId(vacationId);
         vacationRequestService.updateVacationRequest(vacationRequest);
         VacationReqResponse vacationReqResponse = VacationMapper.toVacationReqResponse(vacationRequest);
+        vacationReqResponse.addLinks(uriInfo);
         return Response.ok(vacationReqResponse).build();
     }
 
@@ -62,6 +70,7 @@ public class VacationResource {
         VacationType vacationType = VacationTypeMapper.toVacationType(vacationTypeReqRequest);
         vacationTypeService.createVacationType(vacationType);
         VacationTypeResponse vacationTypeResponse = VacationTypeMapper.toVacationTypeResponse(vacationType);
+        vacationTypeResponse.addLinks(uriInfo);
         return Response.status(Response.Status.CREATED).entity(vacationTypeResponse).build();
     }
 
@@ -72,6 +81,7 @@ public class VacationResource {
         VacationTypeService vacationTypeService = new VacationTypeService();
         VacationType vacationType = vacationTypeService.findVacationType(vacationTypeId);
         VacationTypeResponse vacationTypeResponse = VacationTypeMapper.toVacationTypeResponse(vacationType);
+        vacationTypeResponse.addLinks(uriInfo);
         return Response.ok(vacationTypeResponse).build();
     }
 
@@ -83,6 +93,7 @@ public class VacationResource {
         vacationType.setId(vacationTypeId);
         vacationTypeService.updateVacationType(vacationType);
         VacationTypeResponse vacationTypeResponse = VacationTypeMapper.toVacationTypeResponse(vacationType);
+        vacationTypeResponse.addLinks(uriInfo);
         return Response.ok(vacationTypeResponse).build();
     }
 }

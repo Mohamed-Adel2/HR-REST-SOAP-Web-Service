@@ -13,7 +13,9 @@ import iti.jets.domain.entities.Project;
 import iti.jets.domain.services.EmployeeService;
 import iti.jets.domain.services.ProjectService;
 import jakarta.ws.rs.*;
+import jakarta.ws.rs.core.Context;
 import jakarta.ws.rs.core.Response;
+import jakarta.ws.rs.core.UriInfo;
 
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -23,12 +25,16 @@ import java.util.stream.Collectors;
 @Consumes({"application/json; qs=1", "application/xml; qs=0.75"})
 public class ProjectResource {
 
+    @Context
+    private UriInfo uriInfo;
+
     @GET
     @Path("/{projectId}")
     public Response getProject(@PathParam("projectId") int projectId) {
         ProjectService projectService = new ProjectService();
         Project project = projectService.findProject(projectId);
         ProjectResponse projectResponse = ProjectMapper.toProjectResponse(project);
+        projectResponse.addLinks(uriInfo);
         return Response.ok(projectResponse).build();
     }
 
@@ -39,6 +45,7 @@ public class ProjectResource {
         ProjectService projectService = new ProjectService();
         projectService.createProject(project);
         ProjectResponse projectResponse = ProjectMapper.toProjectResponse(project);
+        projectResponse.addLinks(uriInfo);
         return Response.status(Response.Status.CREATED).entity(projectResponse).build();
     }
 
@@ -50,6 +57,7 @@ public class ProjectResource {
         ProjectService projectService = new ProjectService();
         projectService.updateProject(project);
         ProjectResponse projectResponse = ProjectMapper.toProjectResponse(project);
+        projectResponse.addLinks(uriInfo);
         return Response.ok(projectResponse).build();
     }
 
@@ -66,6 +74,9 @@ public class ProjectResource {
     public Response getProjectEmployees(@PathParam("projectId") int projectId) {
         ProjectService projectService = new ProjectService();
         Set<EmployeeResponse> employees = projectService.getProjectEmployees(projectId).stream().map(EmployeeMapper::toEmployeeResponse).collect(Collectors.toSet());
+        for (EmployeeResponse employeeResponse : employees) {
+            employeeResponse.addLinks(uriInfo);
+        }
         return Response.ok(employees).build();
     }
 
@@ -75,6 +86,7 @@ public class ProjectResource {
         ProjectService projectService = new ProjectService();
         Project project = projectService.findProject(projectId);
         DepartmentResponse departmentResponse = DepartmentMapper.toDepartmentResponse(project.getDepartment());
+        departmentResponse.addLinks(uriInfo);
         return Response.ok(departmentResponse).build();
     }
 
@@ -84,6 +96,9 @@ public class ProjectResource {
         ProjectService projectService = new ProjectService();
         Set<Employee> ret = projectService.addEmployeeToProject(projectId, empId);
         Set<EmployeeResponse> employees = ret.stream().map(EmployeeMapper::toEmployeeResponse).collect(Collectors.toSet());
+        for (EmployeeResponse employee : employees) {
+            employee.addLinks(uriInfo);
+        }
         return Response.ok().entity(employees).build();
     }
 
@@ -93,6 +108,9 @@ public class ProjectResource {
         ProjectService projectService = new ProjectService();
         Set<Employee> ret = projectService.removeEmployeeFromProject(projectId, empId);
         Set<EmployeeResponse> employees = ret.stream().map(EmployeeMapper::toEmployeeResponse).collect(Collectors.toSet());
+        for (EmployeeResponse employee : employees) {
+            employee.addLinks(uriInfo);
+        }
         return Response.ok().entity(employees).build();
     }
 }
