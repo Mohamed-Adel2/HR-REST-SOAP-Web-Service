@@ -3,8 +3,13 @@ package iti.jets.domain.resources;
 import iti.jets.domain.dtos.Vacation.VacationMapper;
 import iti.jets.domain.dtos.Vacation.VacationReqRequest;
 import iti.jets.domain.dtos.Vacation.VacationReqResponse;
+import iti.jets.domain.dtos.VacationType.VacationTypeMapper;
+import iti.jets.domain.dtos.VacationType.VacationTypeRequest;
+import iti.jets.domain.dtos.VacationType.VacationTypeResponse;
 import iti.jets.domain.entities.VacationRequest;
+import iti.jets.domain.entities.VacationType;
 import iti.jets.domain.services.VacationRequestService;
+import iti.jets.domain.services.VacationTypeService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Response;
 
@@ -48,5 +53,36 @@ public class VacationResource {
         VacationRequestService vacationRequestService = new VacationRequestService();
         vacationRequestService.deleteVacationRequest(vacationId);
         return Response.noContent().build();
+    }
+
+    @POST
+    @Path("/types/add")
+    public Response addVacationType(VacationTypeRequest vacationTypeReqRequest) {
+        VacationTypeService vacationTypeService = new VacationTypeService();
+        VacationType vacationType = VacationTypeMapper.toVacationType(vacationTypeReqRequest);
+        vacationTypeService.createVacationType(vacationType);
+        VacationTypeResponse vacationTypeResponse = VacationTypeMapper.toVacationTypeResponse(vacationType);
+        return Response.status(Response.Status.CREATED).entity(vacationTypeResponse).build();
+    }
+
+
+    @GET
+    @Path("/types/{vacationTypeId}")
+    public Response getVacationType(@PathParam("vacationTypeId") int vacationTypeId) {
+        VacationTypeService vacationTypeService = new VacationTypeService();
+        VacationType vacationType = vacationTypeService.findVacationType(vacationTypeId);
+        VacationTypeResponse vacationTypeResponse = VacationTypeMapper.toVacationTypeResponse(vacationType);
+        return Response.ok(vacationTypeResponse).build();
+    }
+
+    @PUT
+    @Path("/types/update/{vacationTypeId}")
+    public Response updateVacationType(@PathParam("vacationTypeId") int vacationTypeId, VacationTypeRequest vacationTypeReqRequest) {
+        VacationTypeService vacationTypeService = new VacationTypeService();
+        VacationType vacationType = VacationTypeMapper.toVacationType(vacationTypeReqRequest);
+        vacationType.setId(vacationTypeId);
+        vacationTypeService.updateVacationType(vacationType);
+        VacationTypeResponse vacationTypeResponse = VacationTypeMapper.toVacationTypeResponse(vacationType);
+        return Response.ok(vacationTypeResponse).build();
     }
 }
