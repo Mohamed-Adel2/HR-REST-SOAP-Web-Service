@@ -1,4 +1,4 @@
-package iti.jets.domain.resources;
+package iti.jets.domain.resources.rest;
 
 import iti.jets.domain.dtos.Vacation.VacationMapper;
 import iti.jets.domain.dtos.Vacation.VacationReqRequest;

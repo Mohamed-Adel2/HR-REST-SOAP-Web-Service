@@ -20,6 +20,7 @@ public class VacationMapper {
     public static VacationRequest toVacationRequest(VacationReqRequest vacationReqRequest) {
         VacationRequest vacationRequest = new VacationRequest();
         EmployeeService employeeService = new EmployeeService();
+        System.out.println("I am here: " + vacationReqRequest.getEmployeeId());
         Employee employee = employeeService.findEmployee(vacationReqRequest.getEmployeeId());
         vacationRequest.setEmployee(employee);
         VacationTypeService vacationTypeService = new VacationTypeService();

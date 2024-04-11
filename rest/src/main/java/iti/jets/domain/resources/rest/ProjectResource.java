@@ -1,4 +1,4 @@
-package iti.jets.domain.resources;
+package iti.jets.domain.resources.rest;
 
 
 import iti.jets.domain.dtos.Department.DepartmentMapper;
@@ -10,7 +10,6 @@ import iti.jets.domain.dtos.Project.ProjectRequest;
 import iti.jets.domain.dtos.Project.ProjectResponse;
 import iti.jets.domain.entities.Employee;
 import iti.jets.domain.entities.Project;
-import iti.jets.domain.services.EmployeeService;
 import iti.jets.domain.services.ProjectService;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.Context;

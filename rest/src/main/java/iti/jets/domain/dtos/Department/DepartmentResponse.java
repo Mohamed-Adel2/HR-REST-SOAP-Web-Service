@@ -1,6 +1,7 @@
 package iti.jets.domain.dtos.Department;
 
 import iti.jets.domain.dtos.util.CustomLink;
+import iti.jets.domain.resources.rest.DepartmentResource;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,38 +16,39 @@ public class DepartmentResponse {
     private int managerId;
     ArrayList<CustomLink> links = new ArrayList<>();
 
-    public void addLinks(UriInfo uriInfo){
-        String employeesLink = uriInfo.getBaseUriBuilder().path(DepartmentResponse.class)
-                .path(DepartmentResponse.class, "getDepartmentEmployees")
-                .queryParam("deptId", departmentId)
+    public void addLinks(UriInfo uriInfo) {
+        String employeesLink = uriInfo.getBaseUriBuilder().path(DepartmentResource.class)
+                .path(DepartmentResource.class, "getDepartmentEmployees")
+                .resolveTemplate("deptId", departmentId)
                 .build()
                 .toString();
         CustomLink employees = new CustomLink();
         employees.setLink(employeesLink);
-        employees.setRel("employees");
+        employees.setRel("department's employees");
         links.add(employees);
 
-        String projectsLink = uriInfo.getBaseUriBuilder().path(DepartmentResponse.class)
-                .path(DepartmentResponse.class, "getDepartmentProjects")
-                .queryParam("deptId", departmentId)
+        String projectsLink = uriInfo.getBaseUriBuilder().path(DepartmentResource.class)
+                .path(DepartmentResource.class, "getDepartmentProjects")
+                .resolveTemplate("deptId", departmentId)
                 .build()
                 .toString();
         CustomLink projects = new CustomLink();
         projects.setLink(projectsLink);
-        projects.setRel("projects");
+        projects.setRel("department's projects");
         links.add(projects);
 
-        String managerLink = uriInfo.getBaseUriBuilder().path(DepartmentResponse.class)
-                .path(DepartmentResponse.class, "getDepartmentManager")
-                .queryParam("empId", managerId)
+        String managerLink = uriInfo.getBaseUriBuilder().path(DepartmentResource.class)
+                .path(DepartmentResource.class, "getDepartmentManager")
+                .resolveTemplate("deptId", departmentId)
                 .build()
                 .toString();
         CustomLink manager = new CustomLink();
         manager.setLink(managerLink);
-        manager.setRel("manager");
+        manager.setRel("department's manager");
         links.add(manager);
 
-        String selfLink = uriInfo.getBaseUriBuilder().path(DepartmentResponse.class)
+        String selfLink = uriInfo.getBaseUriBuilder().path(DepartmentResource.class)
+                .path(DepartmentResource.class, "getDepartment")
                 .resolveTemplate("deptId", departmentId)
                 .build()
                 .toString();

@@ -1,21 +1,27 @@
 package iti.jets.domain.dtos.Project;
 
 import iti.jets.domain.dtos.util.CustomLink;
-import iti.jets.domain.entities.Employee;
-import iti.jets.domain.resources.ProjectResource;
+import iti.jets.domain.dtos.util.LocalDateAdapter;
+import iti.jets.domain.resources.rest.ProjectResource;
 import jakarta.ws.rs.core.UriInfo;
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 @Setter
 @Getter
 public class ProjectResponse {
     private int projectId;
     private String projectName;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate startDate;
+    @XmlJavaTypeAdapter(LocalDateAdapter.class)
     private LocalDate endDate;
     private int departmentId;
     private ArrayList<CustomLink> links = new ArrayList<>();
@@ -28,7 +34,7 @@ public class ProjectResponse {
                 .toString();
         CustomLink employees = new CustomLink();
         employees.setLink(employeesLink);
-        employees.setRel("employees");
+        employees.setRel("project's employees");
         links.add(employees);
 
         String departmentLink = uriInfo.getBaseUriBuilder().path(ProjectResource.class)
@@ -38,7 +44,7 @@ public class ProjectResponse {
                 .toString();
         CustomLink department = new CustomLink();
         department.setLink(departmentLink);
-        department.setRel("department");
+        department.setRel("project's department");
         links.add(department);
 
         String selfLink = uriInfo.getBaseUriBuilder().path(ProjectResource.class)

@@ -1,7 +1,7 @@
 package iti.jets.domain.dtos.VacationType;
 
 import iti.jets.domain.dtos.util.CustomLink;
-import iti.jets.domain.resources.VacationResource;
+import iti.jets.domain.resources.rest.VacationResource;
 import jakarta.ws.rs.core.UriInfo;
 import lombok.Getter;
 import lombok.Setter;
