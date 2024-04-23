@@ -14,8 +14,19 @@ HR Management System API, which provides REST and SOAP APIs for managing human r
 
 <br>
 
+<!-- Features -->
+## :dart: Features
+
+- **👨‍💼 Employee Management**: Allows adding, updating, and removing employee records.
+- **📋 Project Management**: Provides functionality for adding, removing, and updating project details.
+- **🏢 Department Management**: Offers endpoints for adding, removing, and updating department information.
+- **📝 Assignments**: Enables assigning employees to departments and projects.
+- **👩‍💼 Manager Assignments**: Facilitates assigning managers to projects for overseeing project activities.
+
+<br>
+
 <!-- TechStack -->
-### 🛠️ Technologies Used
+## 🛠️ Technologies Used
 
 ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
 ![Hibernate](https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white)
@@ -29,24 +40,14 @@ HR Management System API, which provides REST and SOAP APIs for managing human r
 
 <br>
 
-<!-- Features -->
-### :dart: Features
 
-- **👨‍💼 Employee Management**: Allows adding, updating, and removing employee records.
-- **📋 Project Management**: Provides functionality for adding, removing, and updating project details.
-- **🏢 Department Management**: Offers endpoints for adding, removing, and updating department information.
-- **📝 Assignments**: Enables assigning employees to departments and projects.
-- **👩‍💼 Manager Assignments**: Facilitates assigning managers to projects for overseeing project activities.
-
-<br>
-
-### 📖 API Documentation
+## 📖 API Documentation
 
 You will find the REST API documentation [here](https://documenter.getpostman.com/view/18975848/2sA3BhduVn), you can explore it.
 
 <br>
 
-### API Schema
+## 📫 API Schema
 
 ![Schema](https://github.com/Mohamed-Adel2/HR-REST-SOAP-Web-Service/blob/main/API%20schema.JPG)
 
